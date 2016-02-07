@@ -1,3 +1,13 @@
 config.yml
 vagrant-home/.couchpotato/settings.conf
-
+vagrant-home/.rtorrent/*.torrent
+vagrant-home/.rtorrent/*.torrent.libtorrent_resume
+vagrant-home/.rtorrent/*.torrent.rtorrent
+vagrant-home/.rtorrent/rtorrent.dht_cache
+vagrant-home/.rtorrent/rtorrent.lock
+vagrant-home/.rtorrent.rc
+vagrant-home/.bash_history
+vagrant-home/.couchpotato/cache/
+vagrant-home/.couchpotato/custom_plugins/
+vagrant-home/.couchpotato/database/
+vagrant-home/.couchpotato/logs/
