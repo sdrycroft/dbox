@@ -114,7 +114,8 @@ WantedBy=multi-user.target
 EOF
 
 mkdir /root/.config/
-ln -s /home/vagrant/.config/NzbDrone /root/.config/NzbDrone
+cp -r /home/vagrant/.config/NzbDrone /root/.config/NzbDrone
+chown root:root -R /root/.config
 
 #-- COUCHPOTATO ----------------------------------------------------------------
 
