@@ -109,16 +109,13 @@ git clone https://github.com/RuudBurger/CouchPotatoServer.git /usr/local/share/c
 cd /usr/local/share/couchpotato
 git checkout build/3.0.1
 
-# Create the user to run couchpotato as
-useradd -d /home/couchpotato -r -s /bin/sh couchpotato
-
 cat << EOF > /etc/systemd/system/couchpotato.service
 [Unit]
 Description=CouchPotato
 After=network.target
 
 [Service]
-User=couchpotato
+User=vagrant
 ExecStart=/usr/bin/python /usr/local/share/couchpotato/CouchPotato.py
 
 [Install]
@@ -126,11 +123,10 @@ WantedBy=multi-user.target
 EOF
 
 # Copy the default configuration file if we have not already got one
-if [ ! -f /home/couchpotato/.couchpotato/settings.conf ]
+if [ ! -f /home/vagrant/.couchpotato/settings.conf ]
 then
-	cp /home/couchpotato/.couchpotato/settings.conf.default /home/couchpotato/.couchpotato/settings.conf
+	cp /home/vagrant/.couchpotato/settings.conf.default /home/vagrant/.couchpotato/settings.conf
 fi
-chown -R couchpotato:couchpotato /home/couchpotato
 
 #-- NORDVPN --------------------------------------------------------------------
 
@@ -198,8 +194,6 @@ Vagrant.configure(2) do |config|
   config.vm.network "public_network", ip: settings['ips']['public']
   config.vm.network "private_network", ip: settings['ips']['private']
   config.vm.synced_folder "vagrant-home", "/home/vagrant", type: "nfs"
-  config.vm.synced_folder "couchpotato-home", "/home/couchpotato", type: "nfs"
-  config.vm.synced_folder "nzbdrone-home", "/home/nzbdrone", type: "nfs"
   config.vm.synced_folder ".", "/vagrant", disabled: true
   config.vm.provider "virtualbox" do |vb|
     vb.memory = settings['memory']
