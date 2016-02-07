@@ -76,6 +76,7 @@ EOF
 # Clone ruTorrent
 rm /var/www/html/index.html
 git clone https://github.com/Novik/ruTorrent.git /var/www/html
+chown www-data:www-data -R /var/www/html
 
 # Copy the default configuration file if we have not already got one
 if [ ! -f /home/vagrant/.rtorrent.rc ]
@@ -163,7 +164,6 @@ ExecStart=/usr/sbin/openvpn /etc/openvpn/nordvpn.conf
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl daemon-reload
 
 #-- IPTABLES -------------------------------------------------------------------
 
@@ -179,20 +179,19 @@ iptables -A OUTPUT -p tcp -j DROP
 sleep 30
 
 # Start services
+systemctl daemon-reload
 service openvpn stop
 service nordvpn start
 service couchpotato start
 service nzbdrone start
 service apache2 restart
-# Start rtorrent
-su vagrant -l -c 'screen -d -m rtorrent'
-chown www-data:www-data -R /var/www/html";
+service rtorrent start";
 
 #-- VAGRANT CONFIGURATION ------------------------------------------------------
 Vagrant.configure(2) do |config|
   config.vm.box = "debian/jessie64"
-  config.vm.network "public_network", ip: settings['ips']['public']
   config.vm.network "private_network", ip: settings['ips']['private']
+  config.vm.network "public_network", ip: settings['ips']['public']
   config.vm.synced_folder "vagrant-home", "/home/vagrant", type: "nfs"
   config.vm.synced_folder ".", "/vagrant", disabled: true
   config.vm.provider "virtualbox" do |vb|
