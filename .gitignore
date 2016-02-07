@@ -1,3 +1,4 @@
+.vagrant
 config.yml
 vagrant-home/.couchpotato/settings.conf
 vagrant-home/.rtorrent/*.torrent
