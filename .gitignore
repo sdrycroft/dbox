@@ -12,3 +12,4 @@ vagrant-home/.couchpotato/cache/
 vagrant-home/.couchpotato/custom_plugins/
 vagrant-home/.couchpotato/database/
 vagrant-home/.couchpotato/logs/
+vagrant-home/.couchpotato/db_backup/
