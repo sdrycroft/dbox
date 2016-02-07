@@ -87,16 +87,13 @@ chown -R vagrant:vagrant /home/vagrant/.rtorrent.rc
 
 #-- NZBDRONE ---------------------------------------------------------------------
 
-# Create the user to run nzbdrone as
-useradd -d /opt/NzbDrone -r -s /bin/sh nzbdrone
-
 cat << EOF > /etc/systemd/system/nzbdrone.service
 [Unit]
 Description=NZBDrone
 After=network.target
 
 [Service]
-User=nzbdrone
+User=vagrant
 ExecStart=/usr/bin/mono /opt/NzbDrone/NzbDrone.exe
 
 [Install]
