@@ -5,3 +5,6 @@ nordvpn:
 ips:
   private: 192.168.2.2
   public: 192.168.1.100
+mounts:
+  tv: /home/shared/video/TV
+  film: /home/shared/video/Films

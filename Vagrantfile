@@ -207,6 +207,8 @@ Vagrant.configure(2) do |config|
   config.vm.network "private_network", ip: settings['ips']['private']
   config.vm.network "public_network", ip: settings['ips']['public']
   config.vm.synced_folder "vagrant-home", "/home/vagrant", type: "nfs"
+  config.vm.synced_folder settings['mounts']['tv'], "/home/tv", type: "nfs"
+  config.vm.synced_folder settings['mounts']['film'], "/home/film", type: "nfs"
   config.vm.synced_folder ".", "/vagrant", disabled: true
   config.vm.provider "virtualbox" do |vb|
     vb.memory = settings['memory']
