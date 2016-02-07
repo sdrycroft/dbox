@@ -107,12 +107,14 @@ Description=NZBDrone
 After=network.target
 
 [Service]
-User=vagrant
 ExecStart=/usr/bin/mono /opt/NzbDrone/NzbDrone.exe
 
 [Install]
 WantedBy=multi-user.target
 EOF
+
+mkdir /root/.config/
+ln -s /home/vagrant/.config/NzbDrone /root/.config/NzbDrone
 
 #-- COUCHPOTATO ----------------------------------------------------------------
 
