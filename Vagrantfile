@@ -78,6 +78,20 @@ rm /var/www/html/index.html
 git clone https://github.com/Novik/ruTorrent.git /var/www/html
 chown www-data:www-data -R /var/www/html
 
+cat << EOF > /etc/systemd/system/rtorrent.service
+[Unit]
+Description=rTorrent
+After=network.target
+
+[Service]
+User=vagrant
+ExecStart=/usr/bin/screen -d -m /usr/bin/rtorrent
+Type=forking
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
 # Copy the default configuration file if we have not already got one
 if [ ! -f /home/vagrant/.rtorrent.rc ]
 then
