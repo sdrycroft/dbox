@@ -1,0 +1,6 @@
+dht = on
+dht_port = 6881
+directory = /home/vagrant
+scgi_port = localhost:5000
+session = /home/vagrant/.rtorrent
+directory = /home/vagrant

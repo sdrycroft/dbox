@@ -1,12 +1,5 @@
-#-- CONFIGURATION --------------------------------------------------------------
-$nordvpn_username = 
-$nordvpn_password = 
-$publicstatic_add = '192.168.1.100';
-$local_static_add = '192.168.2.2';
-$memoryallocation = 756;
-$host_film_folder = '/home/shared/video/Films';
-$host__tv__folder = '/home/shared/video/TV';
-#-------------------------------------------------------------------------------
+require 'yaml'
+settings = YAML.load_file 'config.yml'
 #
 # README
 # ======
@@ -84,18 +77,12 @@ EOF
 rm /var/www/html/index.html
 git clone https://github.com/Novik/ruTorrent.git /var/www/html
 
-# Set the configuration for rtorrent
-cat << EOF > /home/vagrant/.rtorrent.rc
-dht = on
-dht_port = 6881
-directory = /home/vagrant
-scgi_port = localhost:5000
-session = /home/vagrant/.rtorrent
-directory = /vagrant
-EOF
-chown vagrant:vagrant /home/vagrant/.rtorrent.rc
-mkdir /home/vagrant/.rtorrent
-chown vagrant:vagrant /home/vagrant/.rtorrent
+# Copy the default configuration file if we have not already got one
+if [ ! -f /home/vagrant/.rtorrent.rc ]
+then
+	cp /home/vagrant/.rtorrent.rc.default /home/vagrant/.rtorrent.rc
+fi
+chown -R vagrant:vagrant /home/vagrant/.rtorrent.rc
 
 #-- NZBDRONE ---------------------------------------------------------------------
 
@@ -125,68 +112,6 @@ git checkout build/3.0.1
 # Create the user to run couchpotato as
 useradd -d /home/couchpotato -r -s /bin/sh couchpotato
 
-# Save settings file
-mkdir /home/couchpotato/.couchpotato
-cat << EOF > /usr/local/share/couchpotato/.couchpotato/settings.conf
-[core]
-launch_browser = 0
-show_wizard = 0
-url_base = couchpotato
-[blackhole]
-enabled = 0
-[rtorrent]
-enabled = 1
-host = scgi://localhost:5000
-[binsearch]
-enabled = 1
-[newznab]
-enabled = 0
-[omgwtfnzbs]
-enabled = 0
-[alpharatio]
-enabled = 0
-[awesomehd]
-enabled = 0
-[bithdtv]
-enabled = 0
-[bitsoup]
-enabled = 0
-[hd4free]
-enabled = 0
-[hdaccess]
-enabled = 0
-[hdbits]
-enabled = 0
-[ilovetorrents]
-enabled = 0
-[iptorrents]
-enabled = 0
-[morethantv]
-enabled = 0
-[passthepopcorn]
-enabled = 0
-[rarbg]
-enabled = 1
-[sceneaccess]
-enabled = 0
-[scenetime]
-enabled = 0
-[thepiratebay]
-enabled = 1
-[torrentbytes]
-enabled = 0
-[torrentday]
-enabled = 0
-[torrentleech]
-enabled = 0
-[torrentpotato]
-enabled = 0
-[torrentshack]
-enabled = 0
-EOF
-
-chown couchpotato:couchpotato -R /home/couchpotato
-
 cat << EOF > /etc/systemd/system/couchpotato.service
 [Unit]
 Description=CouchPotato
@@ -199,6 +124,13 @@ ExecStart=/usr/bin/python /usr/local/share/couchpotato/CouchPotato.py
 [Install]
 WantedBy=multi-user.target
 EOF
+
+# Copy the default configuration file if we have not already got one
+if [ ! -f /home/couchpotato/.couchpotato/settings.conf ]
+then
+	cp /home/couchpotato/.couchpotato/settings.conf.default /home/couchpotato/.couchpotato/settings.conf
+fi
+chown -R couchpotato:couchpotato /home/couchpotato
 
 #-- NORDVPN --------------------------------------------------------------------
 
@@ -220,8 +152,8 @@ done
 
 # Add the username/password
 cat << EOF > /etc/openvpn/nordvpn/pass.txt
-#{$nordvpn_username}
-#{$nordvpn_password}
+#{settings['nordvpn']['username']}
+#{settings['nordvpn']['password']}
 EOF
 
 cat << EOF > /etc/systemd/system/nordvpn.service
@@ -263,16 +195,15 @@ chown www-data:www-data -R /var/www/html";
 #-- VAGRANT CONFIGURATION ------------------------------------------------------
 Vagrant.configure(2) do |config|
   config.vm.box = "debian/jessie64"
-  config.vm.network "public_network", ip: $publicstatic_add
-  config.vm.network "private_network", ip: $local_static_add
+  config.vm.network "public_network", ip: settings['ips']['public']
+  config.vm.network "private_network", ip: settings['ips']['private']
   config.vm.synced_folder "vagrant-home", "/home/vagrant", type: "nfs"
   config.vm.synced_folder "couchpotato-home", "/home/couchpotato", type: "nfs"
   config.vm.synced_folder "nzbdrone-home", "/home/nzbdrone", type: "nfs"
   config.vm.synced_folder ".", "/vagrant", disabled: true
   config.vm.provider "virtualbox" do |vb|
-    vb.memory = $memoryallocation
+    vb.memory = settings['memory']
     vb.name = "download"
   end
   config.vm.provision "shell", inline: $bootstrap
 end
-#!/bin/bash

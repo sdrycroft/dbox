@@ -1,0 +1,55 @@
+[core]
+launch_browser = 0
+show_wizard = 0
+url_base = couchpotato
+[blackhole]
+enabled = 0
+[rtorrent]
+enabled = 1
+host = scgi://localhost:5000
+[binsearch]
+enabled = 1
+[newznab]
+enabled = 0
+[omgwtfnzbs]
+enabled = 0
+[alpharatio]
+enabled = 0
+[awesomehd]
+enabled = 0
+[bithdtv]
+enabled = 0
+[bitsoup]
+enabled = 0
+[hd4free]
+enabled = 0
+[hdaccess]
+enabled = 0
+[hdbits]
+enabled = 0
+[ilovetorrents]
+enabled = 0
+[iptorrents]
+enabled = 0
+[morethantv]
+enabled = 0
+[passthepopcorn]
+enabled = 0
+[rarbg]
+enabled = 1
+[sceneaccess]
+enabled = 0
+[scenetime]
+enabled = 0
+[thepiratebay]
+enabled = 1
+[torrentbytes]
+enabled = 0
+[torrentday]
+enabled = 0
+[torrentleech]
+enabled = 0
+[torrentpotato]
+enabled = 0
+[torrentshack]
+enabled = 0
