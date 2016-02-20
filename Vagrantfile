@@ -152,7 +152,6 @@ wget --quiet https://nordvpn.com/api/files/zip
 unzip -qq zip
 rm zip
 cd ..
-ln -s nordvpn/uk20.nordvpn.com.udp1194.ovpn nordvpn.conf 
 
 # Update the configuration files so that they get the username/password from a file.
 cd /etc/openvpn/nordvpn
@@ -173,6 +172,8 @@ Description=NordVPN service
 After=network.target
 
 [Service]
+ExecStartPre=-/bin/rm /etc/openvpn/nordvpn.conf
+ExecStartPre=/bin/sh -c '/bin/ln -s /etc/openvpn/nordvpn/`/bin/ls -1 /etc/openvpn/nordvpn/ | grep udp | grep ovpn$ | /usr/bin/sort -R | /usr/bin/head -n1` /etc/openvpn/nordvpn.conf'
 ExecStart=/usr/sbin/openvpn /etc/openvpn/nordvpn.conf
 
 [Install]
